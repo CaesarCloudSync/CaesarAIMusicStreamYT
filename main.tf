@@ -22,12 +22,12 @@ resource "google_project_service" "run_api" {
 
 resource "google_cloud_run_service" "run_service" {
   name = "caesaraimusicstreamyt"
-  location = "us-central1"
+  location = "europe-west2"
 
   template {
     spec {
       containers {
-        image = "palondomus/caesaraimusicstreamyt:11"
+        image = "palondomus/caesaraimusicstreamyt:12"
       }
     }
   }
