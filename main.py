@@ -25,8 +25,12 @@ async def index():
 async def getaudio(url:str):
     try:
         ytobj = YouTube(url)
-        ytobj = ytobj.streams.filter(only_audio=True).first()
-        return {"streaming_url":ytobj.url}
+        ytobj = ytobj.streams.filter(only_audio=True).filter(type="audio")
+        try:
+            streaming_url_backup = ytobj[1].url
+        except IndexError as iex:
+            streaming_url_backup = ""
+        return {"streaming_url":ytobj[0].url,"streaming_url_backup":streaming_url_backup}
     except Exception as ex:
         return {"error":f"{type(ex)},{ex}"}
 
