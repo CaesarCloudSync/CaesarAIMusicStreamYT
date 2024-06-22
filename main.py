@@ -6,6 +6,7 @@ from fastapi.responses import StreamingResponse
 from fastapi import WebSocket,WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from pytube import YouTube
+import re
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -26,7 +27,8 @@ async def getaudio(url:str):
     try:
         ytobj = YouTube(url)
         ytobj = ytobj.streams.filter(only_audio=True).filter(type="audio").first()
-        return {"streaming_url":ytobj.url}
+        title = re.sub(r"[/\\?%*:|\"<>\x7F\x00-\x1F]", "-",ytobj.title)
+        return {"streaming_url":ytobj.url,"title":title}
     except Exception as ex:
         return {"error":f"{type(ex)},{ex}"}
 
