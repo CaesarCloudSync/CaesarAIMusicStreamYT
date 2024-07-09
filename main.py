@@ -1,12 +1,13 @@
 import uvicorn
-
+import os
 from typing import Dict,List,Any,Union
 from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
 from fastapi import WebSocket,WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-from pytube import YouTube
 import re
+import subprocess
+
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -25,10 +26,15 @@ async def index():
 @app.get('/getaudio')# GET # allow all origins all methods.
 async def getaudio(url:str):
     try:
-        ytobj = YouTube(url)
-        ytobj = ytobj.streams.filter(only_audio=True).filter(type="audio").first()
-        title = re.sub(r"[/\\?%*:|\"<>\x7F\x00-\x1F]", "-",ytobj.title)
-        return {"streaming_url":ytobj.url,"title":title}
+        response_string = subprocess.getoutput('yt-dlp --audio-format mp3 --print "title:%(artist)s - %(title)s" --get-url {}'.format(url))
+        response_info = response_string.split("\n")
+        streaming_link = next((s for s in response_info if "https://rr" in s), None)
+        title = next((s for s in response_info if "title:" in s), None) 
+        if not title or not streaming_link:
+            return {"error":f"streaming_link:{streaming_link},title:{title}"}
+        else:
+            title = re.sub(r"[/\\?%*:|\"<>\x7F\x00-\x1F]", "-",title.replace("title:","").replace("NA - ",""))
+            return {"streaming_url":streaming_link,"title":title}
     except Exception as ex:
         return {"error":f"{type(ex)},{ex}"}
 
