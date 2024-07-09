@@ -2,7 +2,8 @@
 FROM python:3.10
 RUN export PYTHONPATH=$PWD
 RUN apt-get update && apt-get install curl ffmpeg libsm6 libxext6 uvicorn libopencv-dev python3-opencv tesseract-ocr -y
-RUN pip install uvicorn
+RUN pip install uvicorn 
+RUN pip install --upgrade pytube
 # Set the working directory to /code
 WORKDIR /code
 #VOLUME /home/amari/Desktop/MaturityAI/MaturityFastAPI /code
