@@ -27,7 +27,7 @@ async def index():
 @app.get('/getaudio')# GET # allow all origins all methods.
 async def getaudio(url:str):
     try:
-        response_string = subprocess.getoutput('yt-dlp --audio-format mp3 --print "title:%(artist)s - %(title)s" --get-url {}'.format(url))
+        response_string = subprocess.getoutput('yt-dlp --audio-format mp3 -f bestaudio --print "title:%(artist)s - %(title)s" --get-url {}'.format(url))
         response_info = response_string.split("\n")
         streaming_link = next((s for s in response_info if "https://rr" in s), None)
         title = next((s for s in response_info if "title:" in s), None) 
