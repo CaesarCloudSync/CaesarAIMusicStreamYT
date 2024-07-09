@@ -6,6 +6,7 @@ RUN pip install uvicorn
 RUN pip install --upgrade pytube
 # Set the working directory to /code
 WORKDIR /code
+RUN python3 -m pip install -U "yt-dlp[default]"
 #VOLUME /home/amari/Desktop/MaturityAI/MaturityFastAPI /code
 # Copy the current directory contents into the container at /code
 COPY ./requirements.txt /code/requirements.txt
