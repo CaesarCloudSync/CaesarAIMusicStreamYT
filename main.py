@@ -42,7 +42,7 @@ async def getaudio(url:str):
 @app.get("/getytaudio")
 async def getytaudio(url:str):
     try:
-        response_string = subprocess.getoutput('yt-dlp --audio-format mp3 -f bestaudio --print "title:%(artist)s - %(title)s\n duration:%(duration)s\n thumbnail:%(thumbnail)s\n ytid:%(id)s" --get-url {}'.format(url))
+        response_string = subprocess.getoutput('yt-dlp --audio-format mp3 -f bestaudio --print "title:%(artist)s - %(title)s\n album_name:%(title)s\nduration:%(duration)s\nchannel:%(channel)s\n thumbnail:%(thumbnail)s\n ytid:%(id)s" --get-url {}'.format(url))
         # duration * 1000
         response_info = response_string.split("\n")
         streaming_link = next((s for s in response_info if "https://rr" in s), None)
@@ -58,10 +58,16 @@ async def getytaudio(url:str):
 
         ytid = next((s for s in response_info if "ytid:" in s), None)  
         ytid = ytid.replace("ytid:","") if ytid else None
-        if not title or not streaming_link or not duration or not thumbnail or not ytid:
-            return {"error":f"streaming_link:{streaming_link},title:{title},thumbnail:{thumbnail},duration:{duration},ytid:{ytid},duration:{duration}"}
+
+        album_name = next((s for s in response_info if "album_name:" in s), None)
+        album_name = album_name.replace("album_name:","") if album_name else None 
+
+        artist_name = next((s for s in response_info if "artist_name:" in s), None)
+        artist_name = artist_name.replace("artist_name:","") if artist_name else None 
+        if not title or not streaming_link or not duration or not thumbnail or not ytid or not album_name or not artist_name:
+            return {"error":f"streaming_link:{streaming_link},title:{title},thumbnail:{thumbnail},duration:{duration},ytid:{ytid},duration:{duration}","album_name":album_name,"artist_name":artist_name}
         else:
-            return {"streaming_url":streaming_link,"title":title,"thumbnail":thumbnail,"ytid":ytid,"duration_ms":duration}            
+            return {"streaming_url":streaming_link,"title":title,"thumbnail":thumbnail,"ytid":ytid,"duration_ms":duration,"album_name":album_name,"artist":artist_name}            
             # {"album_id": "1WVIJaAboRSwJOe4u0n0Q7", "album_name": "GABRIEL", "artist": "keshi", "artist_id": "3pc0bOVB5whxmD50W79wwO", "duration_ms": 128779, "id": "4RfjLV2FwnrxCjhCA3ZHf0", "name": "GABRIEL", "playlist_local": "true", "playlist_name": "New Amari Keshi", "thumbnail": "https://i.scdn.co/image/ab67616d0000b27319aff2da63b211d75341e8eb", "track_number": 12}
     except Exception as ex:
         return {"error":f"{type(ex)},{ex}"}   
