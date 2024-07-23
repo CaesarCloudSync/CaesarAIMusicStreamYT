@@ -42,7 +42,7 @@ async def getaudio(url:str):
 @app.get("/getytaudio")
 async def getytaudio(url:str):
     try:
-        response_string = subprocess.getoutput('yt-dlp --audio-format mp3 -f bestaudio --print "title:%(artist)s - %(title)s\n album_name:%(title)s\nduration:%(duration)s\nchannel:%(channel)s\n thumbnail:%(thumbnail)s\n ytid:%(id)s" --get-url {}'.format(url))
+        response_string = subprocess.getoutput('yt-dlp --audio-format mp3 -f bestaudio --print "title:%(artist)s - %(title)s\nalbum_name:%(title)s\nduration:%(duration)s\nartist:%(channel)s\nthumbnail:%(thumbnail)s\nytid:%(id)s" --get-url {}'.format(url))
         # duration * 1000
         response_info = response_string.split("\n")
         streaming_link = next((s for s in response_info if "https://rr" in s), None)
@@ -62,8 +62,8 @@ async def getytaudio(url:str):
         album_name = next((s for s in response_info if "album_name:" in s), None)
         album_name = album_name.replace("album_name:","") if album_name else None 
 
-        artist_name = next((s for s in response_info if "artist_name:" in s), None)
-        artist_name = artist_name.replace("artist_name:","") if artist_name else None 
+        artist_name = next((s for s in response_info if "artist:" in s), None)
+        artist_name = artist_name.replace("artist:","") if artist_name else None 
         if not title or not streaming_link or not duration or not thumbnail or not ytid or not album_name or not artist_name:
             return {"error":f"streaming_link:{streaming_link},title:{title},thumbnail:{thumbnail},duration:{duration},ytid:{ytid},duration:{duration}","album_name":album_name,"artist_name":artist_name}
         else:
