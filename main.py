@@ -42,7 +42,6 @@ async def getaudio(url:str):
 @app.get("/getytaudio")
 async def getytaudio(url:str):
     try:
-        url = "https://www.youtube.com/watch?v=AHLFNoT64HQ"
         response_string = subprocess.getoutput('yt-dlp --audio-format mp3 -f bestaudio --print "title:%(artist)s - %(title)s\n duration:%(duration)s\n thumbnail:%(thumbnail)s\n ytid:%(id)s" --get-url {}'.format(url))
         # duration * 1000
         response_info = response_string.split("\n")
