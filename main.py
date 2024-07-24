@@ -47,7 +47,7 @@ async def getytaudio(url:str):
         response_info = response_string.split("\n")
         streaming_link = next((s for s in response_info if "https://rr" in s), None)
         title = next((s for s in response_info if "title:" in s), None) 
-        title = re.sub(r"[/\\?%*:|\"<>\x7F\x00-\x1F]", "-",title.replace("title:","").replace("NA - ",""))
+        title = re.sub(r"[/\\?%*:|\"<>\x7F\x00-\x1F]", "",title.replace("title:","").replace("NA - ",""))
 
         duration= next((s for s in response_info if "duration:" in s), None) 
         duration= int(duration.replace("duration:","")) * 1000 if duration else None
@@ -63,7 +63,8 @@ async def getytaudio(url:str):
         album_name = album_name.replace("album_name:","") if album_name else None 
 
         artist_name = next((s for s in response_info if "artist:" in s), None)
-        artist_name = artist_name.replace("artist:","") if artist_name else None 
+        artist_name = artist_name.replace("artist:","") if artist_name else None
+        
         
         artist_id = next((s for s in response_info if "artist_id:" in s), None)
         artist_id = artist_id.replace("artist_id:","") if artist_id else None 
