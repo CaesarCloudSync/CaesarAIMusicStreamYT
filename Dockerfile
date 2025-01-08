@@ -1,12 +1,13 @@
 # Use the official Python 3.9 image
-FROM python:3.10
+FROM python:3.10-slim-buster
 RUN export PYTHONPATH=$PWD
-RUN apt-get update && apt-get install curl ffmpeg libsm6 libxext6 uvicorn libopencv-dev python3-opencv tesseract-ocr -y
+#RUN apt-get update && apt-get install curl ffmpeg libsm6 libxext6 uvicorn libopencv-dev python3-opencv tesseract-ocr -y
+RUN apt-get update && apt-get install curl uvicorn -y
 RUN pip install uvicorn 
 RUN pip install --upgrade pytube
 # Set the working directory to /code
 WORKDIR /code
-RUN python3 -m pip install -U "yt-dlp[default]"
+RUN python3 -m pip install -U yt-dlp
 #VOLUME /home/amari/Desktop/MaturityAI/MaturityFastAPI /code
 # Copy the current directory contents into the container at /code
 COPY ./requirements.txt /code/requirements.txt
