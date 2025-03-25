@@ -23,7 +23,10 @@ app.add_middleware(
 
 @app.get('/')# GET # allow all origins all methods.
 async def index():
-    return "Welcome to CaesarAIMusicStreamYT Template."
+    return "Welcome to CaesarAIMusicStreamYT."
+@app.get('/healthcheck')# GET # allow all origins all methods.
+async def healthcheck():
+    return {"status":"OK"}
 @app.get('/getaudio')# GET # allow all origins all methods.
 async def getaudio(url:str):
     try:
