@@ -2,7 +2,7 @@ import re
 
 import uvicorn
 import subprocess
-from fastapi import FastAPI
+from fastapi import FastAPI,Query
 from typing import Dict,List,Any,Union
 from fastapi.responses import StreamingResponse
 from fastapi import WebSocket,WebSocketDisconnect
@@ -28,11 +28,12 @@ async def index():
 async def healthcheck():
     return {"status":"OK"}
 @app.get('/getaudio')# GET # allow all origins all methods.
-async def getaudio(url:str):
+async def getaudio(url: str = Query(...)):
     try:
         response_string = subprocess.getoutput('yt-dlp --rm-cache-dir --geo-bypass --audio-format mp3 -f bestaudio --print "title:%(artist)s - %(title)s" --get-url {}'.format(url))
         response_info = response_string.split("\n")
         streaming_link = next((s for s in response_info if "https://rr" in s), None)
+        print(response_string)
         title = next((s for s in response_info if "title:" in s), None) 
         if not title or not streaming_link:
             return {"error":f"streaming_link:{streaming_link},title:{title}"}

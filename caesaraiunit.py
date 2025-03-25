@@ -3,7 +3,7 @@ import requests
 import unittest
 import sys
 
-base_url = "https://music.caesaraihub.org/" 
+base_url = "http://localhost:8080" 
 
 
 class CaesarAIUnittest(unittest.TestCase):
